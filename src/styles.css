@@ -546,3 +546,46 @@ footer{border-top:1px solid var(--line);padding:56px 4vw 26px;background:var(--b
 .svc.svc-3{grid-template-columns:repeat(3,1fr)}
 @media(max-width:1000px){ .svc.svc-3{grid-template-columns:repeat(2,1fr)} }
 @media(max-width:560px){ .svc.svc-3{grid-template-columns:1fr} }
+
+/* ============ ЛОЯЛЬНОСТЬ / БАЛЛЫ (feature/logic-of-credits) ============ */
+
+/* бейдж начисляемых баллов на карточках/товаре */
+.earn-pts{font-size:.68rem;letter-spacing:.08em;color:var(--gold);margin-top:6px;font-weight:600}
+.authed .earn-pts::before{content:'✦ '}
+.earn-note{font-size:.8rem;color:var(--gold2);background:rgba(212,175,106,.07);border:1px solid var(--line);border-radius:var(--rad);padding:10px 14px;margin-bottom:18px;font-weight:400}
+/* баллы прячем у гостей (как и цену) */
+:not(.authed) .earn-pts{display:none}
+
+/* акцент «баллы vs скидка» на странице правил */
+.loyalty-note{border:1px solid var(--gold);background:rgba(212,175,106,.07);border-radius:var(--rad);padding:16px 20px;font-size:.9rem;line-height:1.6;font-weight:300}
+
+/* карточки начисления/трат */
+.loy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.loy-card{border:1px solid var(--line2);border-radius:var(--rad);background:var(--panel);padding:22px 20px;transition:.3s}
+.loy-card:hover{border-color:var(--line)}
+.loy-card.spend{background:linear-gradient(180deg,rgba(212,175,106,.05),transparent)}
+.loy-ico{font-size:1.5rem;display:block;margin-bottom:12px}
+.loy-title{font-size:1rem;margin-bottom:6px}
+.loy-value{font-family:var(--serif);font-size:1.25rem;color:var(--gold2)}
+.loy-note-sm{font-size:.74rem;margin-top:6px;font-weight:300;line-height:1.5}
+
+.loy-list{list-style:none;margin:0;padding:0}
+.loy-list li{font-size:.86rem;font-weight:300;padding:9px 0;border-bottom:1px solid var(--line2);color:var(--text)}
+.loy-list li::before{content:'✦ ';color:var(--gold)}
+
+/* статусы */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tier-card{border:1px solid var(--line2);border-radius:var(--rad);background:var(--panel);padding:26px 22px}
+.tier-card.gold{border-color:var(--line)}
+.tier-card.platinum{border-color:var(--gold);background:linear-gradient(180deg,rgba(212,175,106,.08),transparent)}
+.tier-name{font-family:var(--serif);font-size:1.6rem;color:var(--gold2);letter-spacing:.05em}
+.tier-th{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin:4px 0 16px}
+
+@media(max-width:1000px){ .loy-grid,.tier-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:560px){ .loy-grid,.tier-grid{grid-template-columns:1fr} }
+
+/* бонус первой покупки «+500» с подсказкой на hover/тап */
+.first-bonus{position:relative;display:inline-flex;align-items:center;gap:3px;color:var(--gold2);font-weight:700;cursor:help;outline:none}
+.first-bonus .fb-i{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1px solid var(--gold);border-radius:50%;font-size:.56rem;font-weight:700;color:var(--gold);line-height:1}
+.first-bonus::after{content:attr(data-tip);position:absolute;bottom:150%;left:50%;transform:translateX(-50%) translateY(4px);white-space:nowrap;background:var(--panel2,#191922);color:var(--text);border:1px solid var(--gold);border-radius:8px;padding:8px 12px;font-size:.72rem;font-weight:400;letter-spacing:.02em;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:20}
+.first-bonus:hover::after,.first-bonus:focus::after,.first-bonus:active::after{opacity:1;transform:translateX(-50%) translateY(0)}

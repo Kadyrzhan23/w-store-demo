@@ -1,2 +1,5 @@
 /node_modules
-.idea
+/.idea
+/dist
+/chasi-deploy.zip
+/chasi-redesign

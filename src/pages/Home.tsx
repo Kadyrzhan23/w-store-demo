@@ -5,6 +5,7 @@ import WatchVisual from '../components/WatchVisual'
 import { toast } from '../toast'
 import { useAuth, useTheme } from '../App'
 import { effectivePrice, isLowStock, useProducts } from '../store/products'
+import EarnBadge from '../components/EarnBadge'
 import { useI18n } from '../i18n/engine'
 
 const HERO_PHOTO: Record<string, string> = {
@@ -118,6 +119,7 @@ export default function Home() {
                   : <>{p.price.toLocaleString('ru-RU')} $</>}
               </div>
               <div className="lock-note">{t('common.priceLocked')}</div>
+              <EarnBadge product={p} />
               <div className="card-cta muted">{t('common.openCard')}</div>
             </div>
           ))}

@@ -8,6 +8,7 @@ import Cart from './pages/Cart'
 import Account from './pages/Account'
 import Admin from './pages/Admin'
 import ProductEdit from './pages/ProductEdit'
+import Loyalty from './pages/Loyalty'
 import Passport from './pages/Passport'
 import { CartProvider, useCart } from './store/cart'
 import { I18nProvider, LANGS, useI18n } from './i18n/engine'
@@ -135,6 +136,7 @@ function Footer() {
           <div className="fi">{t('footer.addr2')}</div>
           <div className="fi">{t('footer.hours')}</div>
           <a href="tel:+998909030004">+998 90 903 00 04</a>
+          <NavLink to="/loyalty">{t('footer.loyalty')}</NavLink>
         </div>
         <div>
           <h4>{t('footer.contact')}</h4>
@@ -187,6 +189,7 @@ export default function App() {
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/gift-sets" element={<GiftSets />} />
+              <Route path="/loyalty" element={<Loyalty />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/account" element={<Account />} />
               <Route path="/admin" element={<Admin />} />

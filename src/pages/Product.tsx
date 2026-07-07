@@ -4,6 +4,7 @@ import { useAuth } from '../App'
 import { useCart } from '../store/cart'
 import { effectivePrice, isLastOne, isLowStock, useProducts } from '../store/products'
 import { catalogLink, relatedProducts } from '../store/tags'
+import EarnBadge from '../components/EarnBadge'
 import { useI18n } from '../i18n/engine'
 import { toast } from '../toast'
 
@@ -123,7 +124,9 @@ export default function Product() {
                 </>
               : money(p.price)}
           </div>
-          <div className="lock-note" style={{ marginBottom: 22 }}>{t('common.priceLocked')}</div>
+          <div className="lock-note" style={{ marginBottom: 14 }}>{t('common.priceLocked')}</div>
+
+          <EarnBadge product={p} variant="page" />
 
           {p.inStock && low && (
             <div className="urgency">
@@ -171,6 +174,7 @@ export default function Product() {
                     : money(r.price)}
                 </div>
                 <div className="lock-note">{t('common.priceLocked')}</div>
+                <EarnBadge product={r} />
               </div>
             ))}
           </div>

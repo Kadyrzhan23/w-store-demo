@@ -14,12 +14,15 @@ const ru: Dict = {
     inCart: 'В корзине: {n} · добавить ещё', goToCart: 'Перейти в корзину →',
     openCard: 'Открыть карточку →', priceLocked: '🔒 Войдите, чтобы увидеть цену',
     queue: 'Встать в очередь', save: 'выгода {sum}', cartTitle: 'Корзина',
+    earnPoints: '+{n} баллов', earnNote: 'За покупку начислим +{n} баллов на бонусный счёт',
+    firstBonusTip: 'Бонус за первую покупку в CHASI.UZ',
   },
   footer: {
     blurb: 'Бутик часов в центре Ташкента. Оригиналы и качественные реплики мировых брендов.',
     shop: 'Магазин', addr1: 'Улица Мирабад, дом 12', addr2: 'Между Grand Mir Hotel и МВД',
     hours: 'Пн – Вс, 11:30 – 21:00', contact: 'Мы на связи',
     copyright: '© 2026 CHASI.UZ · Демонстрационный прототип', payments: 'Оплата: Click · Payme · Visa · Mastercard',
+    loyalty: 'Баллы и статусы',
   },
   home: {
     heroTag: 'Бутик часов · Ташкент',
@@ -110,12 +113,15 @@ const en: Dict = {
     inCart: 'In cart: {n} · add more', goToCart: 'Go to cart →',
     openCard: 'Open card →', priceLocked: '🔒 Log in to see the price',
     queue: 'Join the queue', save: 'you save {sum}', cartTitle: 'Cart',
+    earnPoints: '+{n} points', earnNote: 'Earn +{n} points to your bonus account with this purchase',
+    firstBonusTip: 'Bonus for your first purchase at CHASI.UZ',
   },
   footer: {
     blurb: 'Watch boutique in central Tashkent. Genuine pieces and premium replicas of world brands.',
     shop: 'Store', addr1: '12 Mirabad Street', addr2: 'Between Grand Mir Hotel and the MIA',
     hours: 'Mon – Sun, 11:30 – 21:00', contact: 'Get in touch',
     copyright: '© 2026 CHASI.UZ · Demo prototype', payments: 'Payment: Click · Payme · Visa · Mastercard',
+    loyalty: 'Points & tiers',
   },
   home: {
     heroTag: 'Watch boutique · Tashkent',
@@ -206,12 +212,15 @@ const uz: Dict = {
     inCart: 'Savatda: {n} · yana qoʻshish', goToCart: 'Savatga oʻtish →',
     openCard: 'Kartani ochish →', priceLocked: '🔒 Narxni koʻrish uchun royhattan oting',
     queue: 'Navbatga turish', save: 'foyda {sum}', cartTitle: 'Savat',
+    earnPoints: '+{n} ball', earnNote: 'Ushbu xarid uchun bonus hisobingizga +{n} ball olasiz',
+    firstBonusTip: 'CHASI.UZ dagi birinchi xaridingiz uchun bonus',
   },
   footer: {
     blurb: 'Toshkent markazidagi soat butigi. Jahon brendlarining originallari va sifatli replikalari.',
     shop: 'Doʻkon', addr1: 'Mirobod koʻchasi, 12-uy', addr2: 'Grand Mir Hotel va IIV oʻrtasida',
     hours: 'Dush – Yak, 11:30 – 21:00', contact: 'Biz bilan aloqa',
     copyright: '© 2026 CHASI.UZ · Namoyish prototipi', payments: 'Toʻlov: Click · Payme · Visa · Mastercard',
+    loyalty: 'Ballar va darajalar',
   },
   home: {
     heroTag: 'Soat butigi · Toshkent',

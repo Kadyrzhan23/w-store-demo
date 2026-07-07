@@ -5,6 +5,7 @@ import { brands, Category, products, Style, STYLE_LABEL } from '../data/mock'
 import { useAuth } from '../App'
 import { effectivePrice, isLowStock, useProducts } from '../store/products'
 import { catalogLink } from '../store/tags'
+import EarnBadge from '../components/EarnBadge'
 import { useI18n } from '../i18n/engine'
 
 type Wrist = 'any' | 'slim' | 'mid' | 'wide'
@@ -240,6 +241,7 @@ export default function Catalog() {
                     : <>{p.price.toLocaleString('ru-RU')} $</>}
                 </div>
                 <div className="lock-note">{t('common.priceLocked')}</div>
+                <EarnBadge product={p} />
                 <div className="card-cta muted">{t('common.openCard')}</div>
               </div>
             ))}

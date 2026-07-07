@@ -30,6 +30,7 @@ export default function Account() {
             <span className="pill y">Gold · 1 240 баллов</span>
           </div>
           <div className="muted" style={{ fontSize: '.66rem', marginTop: 10, lineHeight: 1.6 }}>До уровня Platinum: 2 760 баллов</div>
+          <Link to="/loyalty" style={{ fontSize: '.7rem', color: 'var(--gold2)', display: 'inline-block', marginTop: 10 }}>Как работают баллы →</Link>
         </div>
         <nav>
           <button className={tab === 'watches' ? 'on' : ''} onClick={() => setTab('watches')}>Мои часы · паспорта</button>
