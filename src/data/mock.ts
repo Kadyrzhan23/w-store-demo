@@ -364,7 +364,7 @@ export type OnlineOrder = {
 }
 
 /* ============ Записи на ТО (клиент записывается с витрины) ============ */
-export type BookingStatus = 'новая' | 'подтверждена' | 'выполнена'
+export type BookingStatus = 'новая' | 'подтверждена' | 'отказано'
 export type ServiceBooking = {
   id: string
   createdAt: string      // ISO
@@ -374,18 +374,25 @@ export type ServiceBooking = {
   year: number
   date: string           // YYYY-MM-DD — выбранный день
   status: BookingStatus
+  rejectReason?: string  // причина отказа
 }
 
-/* Мок-записи на демо-неделю (Пн 06.07 – Вс 12.07.2026) */
-export const serviceBookings: ServiceBooking[] = [
-  { id: 'SB-1001', createdAt: '2026-07-02T10:12:00', name: 'Тимур Рахимов',     phone: '+998 97 401 77 02', watch: 'Tissot Seastar 1000',   year: 2024, date: '2026-07-06', status: 'подтверждена' },
-  { id: 'SB-1002', createdAt: '2026-07-02T18:40:00', name: 'Дильноза Юсупова',  phone: '+998 93 220 18 44', watch: 'Longines HydroConquest', year: 2023, date: '2026-07-06', status: 'новая' },
-  { id: 'SB-1003', createdAt: '2026-07-03T09:05:00', name: 'Малика Ахмедова',   phone: '+998 90 555 90 31', watch: 'FC Classics',           year: 2022, date: '2026-07-08', status: 'подтверждена' },
-  { id: 'SB-1004', createdAt: '2026-07-03T14:22:00', name: 'Жасур Ибрагимов',   phone: '+998 94 118 23 65', watch: 'Orient Bambino',        year: 2021, date: '2026-07-09', status: 'новая' },
-  { id: 'SB-1005', createdAt: '2026-07-03T20:31:00', name: 'Нодира Салимова',   phone: '+998 99 812 40 19', watch: 'Rolex Datejust 36',     year: 2025, date: '2026-07-10', status: 'подтверждена' },
-  { id: 'SB-1006', createdAt: '2026-07-04T11:50:00', name: 'Сардор Тошматов',   phone: '+998 91 733 55 80', watch: 'Alpina Startimer',      year: 2023, date: '2026-07-11', status: 'новая' },
-  { id: 'SB-1007', createdAt: '2026-07-04T16:18:00', name: 'Камола Нуриддинова', phone: '+998 95 640 12 97', watch: 'Cartier Santos Medium', year: 2024, date: '2026-07-11', status: 'подтверждена' },
-]
+/* Демо-записи на ТЕКУЩУЮ неделю (даты считаются от реальной даты).
+   Статус «подтверждена» — чтобы график был заполнен, но счётчик НОВЫХ
+   заявок стартовал с нуля; новые появляются только при реальной заявке. */
+const _pad = (n: number) => String(n).padStart(2, '0')
+function _weekDay(offset: number): string {
+  const d = new Date()
+  const wd = (d.getDay() + 6) % 7      // 0 = понедельник
+  d.setDate(d.getDate() - wd + offset) // понедельник текущей недели + offset
+  return `${d.getFullYear()}-${_pad(d.getMonth() + 1)}-${_pad(d.getDate())}`
+}
 
-/* Начало демо-недели для графика записей (понедельник) */
-export const BOOKING_WEEK_START = '2026-07-06'
+export const serviceBookings: ServiceBooking[] = [
+  { id: 'SB-9001', createdAt: _weekDay(0) + 'T09:10:00', name: 'Тимур Рахимов',      phone: '+998 97 401 77 02', watch: 'Tissot Seastar 1000',   year: 2024, date: _weekDay(0), status: 'подтверждена' },
+  { id: 'SB-9002', createdAt: _weekDay(1) + 'T11:40:00', name: 'Дильноза Юсупова',   phone: '+998 93 220 18 44', watch: 'Longines HydroConquest', year: 2023, date: _weekDay(1), status: 'подтверждена' },
+  { id: 'SB-9003', createdAt: _weekDay(2) + 'T13:05:00', name: 'Малика Ахмедова',    phone: '+998 90 555 90 31', watch: 'FC Classics',           year: 2022, date: _weekDay(2), status: 'подтверждена' },
+  { id: 'SB-9004', createdAt: _weekDay(3) + 'T15:20:00', name: 'Нодира Салимова',    phone: '+998 99 812 40 19', watch: 'Rolex Datejust 36',     year: 2025, date: _weekDay(3), status: 'подтверждена' },
+  { id: 'SB-9005', createdAt: _weekDay(4) + 'T10:30:00', name: 'Сардор Тошматов',    phone: '+998 91 733 55 80', watch: 'Alpina Startimer',      year: 2023, date: _weekDay(4), status: 'подтверждена' },
+  { id: 'SB-9006', createdAt: _weekDay(5) + 'T16:15:00', name: 'Камола Нуриддинова', phone: '+998 95 640 12 97', watch: 'Cartier Santos Medium', year: 2024, date: _weekDay(5), status: 'подтверждена' },
+]

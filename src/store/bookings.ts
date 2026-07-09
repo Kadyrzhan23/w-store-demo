@@ -2,7 +2,8 @@ import { useSyncExternalStore } from 'react'
 import { BookingStatus, ServiceBooking, serviceBookings } from '../data/mock'
 
 /* ============ Записи на ТО (localStorage + подписка) ============
-   Мок-записи из mock.ts + заявки, оформленные с витрины. */
+   Демо-записи текущей недели (подтверждённые) + реальные заявки с витрины.
+   Счётчик НОВЫХ стартует с нуля — новые появляются только при заявке. */
 
 const KEY = 'chasi-bookings'
 
@@ -34,7 +35,7 @@ function subscribe(fn: () => void): () => void {
   return () => listeners.delete(fn)
 }
 
-/** Все записи: мок (демо-неделя) + оформленные с сайта, новые сверху. */
+/** Все записи: заявки с сайта (localStorage) + демо текущей недели. */
 export function getBookings(): ServiceBooking[] {
   return [...stored(), ...serviceBookings]
 }
@@ -50,13 +51,17 @@ export function addBooking(b: Omit<ServiceBooking, 'id' | 'createdAt' | 'status'
   return booking
 }
 
-export function setBookingStatus(id: string, status: BookingStatus) {
-  // статус можно менять только у заявок с сайта (мок-записи неизменяемы в демо)
-  write(stored().map(b => (b.id === id ? { ...b, status } : b)))
+export function setBookingStatus(id: string, status: BookingStatus, rejectReason?: string) {
+  write(stored().map(b => (b.id === id ? { ...b, status, ...(rejectReason !== undefined ? { rejectReason } : {}) } : b)))
 }
 
-/** React-хук: живой список записей. */
+/** React-хук: живой список записей (localStorage + демо-неделя). */
 export function useBookings(): ServiceBooking[] {
   const s = useSyncExternalStore(subscribe, stored, stored)
   return [...s, ...serviceBookings]
+}
+
+/** React-хук: только МОИ заявки (оформленные с этого устройства). */
+export function useMyBookings(): ServiceBooking[] {
+  return useSyncExternalStore(subscribe, stored, stored)
 }

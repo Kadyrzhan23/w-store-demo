@@ -4,12 +4,15 @@ import QR from '../components/QR'
 import WatchVisual from '../components/WatchVisual'
 import ServiceBooking from '../components/ServiceBooking'
 import { myNotifications, myPurchases, myWishlist, products } from '../data/mock'
+import { useMyBookings } from '../store/bookings'
 import { toast } from '../toast'
 
-type Tab = 'watches' | 'wishlist' | 'notif'
+type Tab = 'watches' | 'wishlist' | 'requests' | 'notif'
 
 export default function Account() {
   const [tab, setTab] = useState<Tab>('watches')
+  const myBookings = useMyBookings()
+  const newReq = myBookings.filter(b => b.status === 'новая').length
 
   const prod = (id: number) => products.find(p => p.id === id)!
 
@@ -36,6 +39,9 @@ export default function Account() {
         <nav>
           <button className={tab === 'watches' ? 'on' : ''} onClick={() => setTab('watches')}>Мои часы · паспорта</button>
           <button className={tab === 'wishlist' ? 'on' : ''} onClick={() => setTab('wishlist')}>Wishlist · очередь</button>
+          <button className={tab === 'requests' ? 'on' : ''} onClick={() => setTab('requests')}>
+            Мои запросы {newReq > 0 && <span className="side-badge">{newReq}</span>}
+          </button>
           <button className={tab === 'notif' ? 'on' : ''} onClick={() => setTab('notif')}>Уведомления</button>
         </nav>
       </aside>
@@ -118,6 +124,40 @@ export default function Account() {
                 ))}
               </tbody>
             </table>
+          </>
+        )}
+
+        {tab === 'requests' && (
+          <>
+            <div className="sec-head" style={{ marginBottom: 30 }}>
+              <div><span className="sec-label">Личный кабинет</span><h2>Мои запросы на ТО</h2></div>
+            </div>
+            {myBookings.length === 0 ? (
+              <div className="empty">
+                Пока нет запросов на обслуживание. Оформите заявку в разделе «Мои часы» или на главной — статус появится здесь.
+              </div>
+            ) : (
+              <div className="req-list">
+                {myBookings.map(b => (
+                  <div key={b.id} className={`req-card ${b.status}`}>
+                    <div className="req-top">
+                      <div>
+                        <b>{b.watch}</b>{b.year ? <span className="muted"> · {b.year}</span> : null}
+                        <div className="muted" style={{ fontSize: '.74rem', marginTop: 3 }}>Дата визита: {b.date.split('-').reverse().join('.')}</div>
+                      </div>
+                      {b.status === 'новая' && <span className="pill y">на рассмотрении</span>}
+                      {b.status === 'подтверждена' && <span className="pill g">подтверждена ✓</span>}
+                      {b.status === 'отказано' && <span className="pill r">отказано</span>}
+                    </div>
+                    <div className="req-msg muted">
+                      {b.status === 'новая' && 'Заявка отправлена. Ждём подтверждения мастера — уведомим вас об изменении статуса.'}
+                      {b.status === 'подтверждена' && `Запись подтверждена. Ждём вас ${b.date.split('-').reverse().join('.')} в бутике на Мирабад, 12.`}
+                      {b.status === 'отказано' && `К сожалению, в записи отказано${b.rejectReason ? `: ${b.rejectReason}` : ''}. Свяжитесь с нами, подберём другой вариант.`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </>
         )}
 

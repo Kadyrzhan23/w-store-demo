@@ -21,7 +21,7 @@ const ru: Dict = {
     label: 'Сервис', title: 'Записаться на ТО',
     text: 'Оставьте заявку — подберём удобный день для обслуживания ваших часов. Никаких очередей: приходите к назначенному времени.',
     name: 'Ваше имя', phone: 'Телефон', watch: 'Часы: бренд и модель', year: 'Год часов', date: 'Удобный день',
-    submit: 'Записаться', success: 'Заявка на ТО принята ✦', successText: 'Ждём вас {date}. Менеджер подтвердит запись — заявка уже видна в CRM.',
+    submit: 'Записаться', success: 'Заявка на ТО принята ✦', successText: 'Ждём вас {date}. Следите за статусом в кабинете → «Мои запросы».',
     featuresTitle: 'Что входит в ТО', f1: 'Чистка и смазка механизма, проверка точности хода', f2: 'Проверка водозащиты и замена прокладок', f3: 'Бесплатно по гарантии: 1 год → 1 ТО, 2 года → 2 ТО', open: 'Записаться на ТО', close: 'Свернуть',
   },
   footer: {
@@ -127,7 +127,7 @@ const en: Dict = {
     label: 'Service', title: 'Book a service',
     text: 'Leave a request — we will arrange a convenient day to service your watch. No queues: just come at the agreed time.',
     name: 'Your name', phone: 'Phone', watch: 'Watch: brand & model', year: 'Watch year', date: 'Preferred day',
-    submit: 'Book', success: 'Service request received ✦', successText: 'See you on {date}. The manager will confirm — the request is already in the CRM.',
+    submit: 'Book', success: 'Service request received ✦', successText: 'See you on {date}. Track the status in your account → “My requests”.',
     featuresTitle: 'What the service includes', f1: 'Movement cleaning & lubrication, accuracy check', f2: 'Water-resistance check & gasket replacement', f3: 'Free under warranty: 1 year → 1 service, 2 years → 2', open: 'Book a service', close: 'Collapse',
   },
   footer: {
@@ -233,7 +233,7 @@ const uz: Dict = {
     label: 'Servis', title: 'Texnik xizmatga yozilish',
     text: 'Ariza qoldiring — soatingizga xizmat koʻrsatish uchun qulay kunni tanlaymiz. Navbatsiz: belgilangan vaqtda keling.',
     name: 'Ismingiz', phone: 'Telefon', watch: 'Soat: brend va model', year: 'Soat yili', date: 'Qulay kun',
-    submit: 'Yozilish', success: 'Servis arizasi qabul qilindi ✦', successText: '{date} kuni kutamiz. Menejer tasdiqlaydi — ariza allaqachon CRM da.',
+    submit: 'Yozilish', success: 'Servis arizasi qabul qilindi ✦', successText: '{date} kuni kutamiz. Holatni kabinetda kuzating → «Mening arizalarim».',
     featuresTitle: 'Texnik xizmatga nima kiradi', f1: 'Mexanizmni tozalash va moylash, aniqlikni tekshirish', f2: 'Suvga chidamlilikni tekshirish va zichlagichlarni almashtirish', f3: 'Kafolat boʻyicha bepul: 1 yil → 1 ta, 2 yil → 2 ta', open: 'Texnik xizmatga yozilish', close: 'Yopish',
   },
   footer: {

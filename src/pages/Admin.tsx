@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BOOKING_WEEK_START, clients, Client, demand, DISCOUNT_OPTIONS, DISCOUNT_PIN, giftSets, GIFT_BOX, interests, OnlineOrder, PAYMENT_LABEL, products, Sale, salesMock, serviceDue, views7d, dailyVisits } from '../data/mock'
+import { clients, Client, demand, DISCOUNT_OPTIONS, DISCOUNT_PIN, giftSets, GIFT_BOX, interests, OnlineOrder, PAYMENT_LABEL, products, Sale, salesMock, serviceDue, views7d, dailyVisits } from '../data/mock'
 import { updateOrderStatus, useOrders } from '../store/orders'
 import { effectivePrice, isLowStock, setDiscount, setStock, useProducts } from '../store/products'
 import { setBookingStatus, useBookings } from '../store/bookings'
@@ -394,14 +394,26 @@ function WebOrders({ orders, onProcess }: { orders: OnlineOrder[]; onProcess: (o
 const DOW = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
 const pad2 = (n: number) => String(n).padStart(2, '0')
 const isoDate = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
-const statusPill = (s: string) =>
-  s === 'выполнена' ? 'g' : s === 'подтверждена' ? 'b' : 'y'
+const statusPill = (s: string) => (s === 'подтверждена' ? 'g' : s === 'отказано' ? 'r' : 'y')
+const mondayOf = (src: Date) => {
+  const d = new Date(src)
+  const wd = (d.getDay() + 6) % 7 // 0 = Пн
+  d.setDate(d.getDate() - wd)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+const REJECT_REASONS = ['Нет запчастей', 'Часы не на гарантии', 'Занят мастер', 'Неверные данные']
 
 function ServiceBookings() {
   const bookings = useBookings()
   const newCount = bookings.filter(b => b.status === 'новая').length
+  const [rejectId, setRejectId] = useState<string | null>(null)
+  const [reason, setReason] = useState('')
+  const [weekOffset, setWeekOffset] = useState(0) // 0 = текущая неделя
 
-  const weekStart = new Date(BOOKING_WEEK_START + 'T00:00:00')
+  // График открывается на текущей неделе; ◀ ▶ листают недели
+  const weekStart = mondayOf(new Date())
+  weekStart.setDate(weekStart.getDate() + weekOffset * 7)
   const days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(weekStart)
     d.setDate(weekStart.getDate() + i)
@@ -409,6 +421,19 @@ function ServiceBookings() {
   })
 
   const list = [...bookings].sort((a, b) => (b.date + b.createdAt).localeCompare(a.date + a.createdAt))
+
+  const confirm = (b: typeof bookings[number]) => {
+    setBookingStatus(b.id, 'подтверждена')
+    toast({ title: 'Запись подтверждена ✦', text: `${b.name.split(' ')[0]}, ждём вас ${b.date.split('-').reverse().join('.')} на ТО «${b.watch}». — так уведомление придёт клиенту.` })
+  }
+
+  const doReject = () => {
+    if (!rejectId || !reason.trim()) return
+    const b = bookings.find(x => x.id === rejectId)
+    setBookingStatus(rejectId, 'отказано', reason.trim())
+    toast({ title: 'Заявка отклонена', text: `${b?.name.split(' ')[0] ?? ''}: в записи на ТО отказано — ${reason.trim()}. — так уведомление придёт клиенту.` })
+    setRejectId(null); setReason('')
+  }
 
   return (
     <>
@@ -420,8 +445,20 @@ function ServiceBookings() {
 
       {/* график недели */}
       <div className="panel">
-        <h3 style={{ marginBottom: 4 }}>График записей · неделя</h3>
-        <div className="sub">{DOW[weekStart.getDay()]} {pad2(weekStart.getDate())}.{pad2(weekStart.getMonth() + 1)} — {pad2(days[6].getDate())}.{pad2(days[6].getMonth() + 1)}</div>
+        <div className="week-nav">
+          <button className="week-arrow" title="Предыдущая неделя" onClick={() => setWeekOffset(o => o - 1)}>◀</button>
+          <div style={{ textAlign: 'center' }}>
+            <h3 style={{ marginBottom: 2 }}>График записей</h3>
+            <div className="sub" style={{ marginBottom: 0 }}>
+              {pad2(weekStart.getDate())}.{pad2(weekStart.getMonth() + 1)} — {pad2(days[6].getDate())}.{pad2(days[6].getMonth() + 1)}
+              {weekOffset === 0 && <span style={{ color: 'var(--gold)' }}> · текущая</span>}
+            </div>
+          </div>
+          <button className="week-arrow" title="Следующая неделя" onClick={() => setWeekOffset(o => o + 1)}>▶</button>
+        </div>
+        {weekOffset !== 0 && (
+          <button className="reset-btn" style={{ marginBottom: 12 }} onClick={() => setWeekOffset(0)}>← к текущей неделе</button>
+        )}
         <div className="week-grid">
           {days.map(d => {
             const iso = isoDate(d)
@@ -431,12 +468,15 @@ function ServiceBookings() {
                 <div className="week-head">{DOW[d.getDay()]}<span>{pad2(d.getDate())}.{pad2(d.getMonth() + 1)}</span></div>
                 <div className="week-body">
                   {dayB.length === 0 && <div className="week-empty">—</div>}
-                  {dayB.map(b => (
-                    <div className={`week-item ${b.status === 'новая' ? 'is-new' : ''}`} key={b.id} title={`${b.name} · ${b.phone}`}>
-                      <b>{b.name.split(' ')[0]}</b>
-                      <span>{b.watch}</span>
-                    </div>
-                  ))}
+                  {dayB.map(b => {
+                    const cls = b.status === 'новая' ? 'is-new' : b.status === 'отказано' ? 'is-rejected' : ''
+                    return (
+                      <div className={`week-item ${cls}`} key={b.id} title={`${b.name} · ${b.phone}${b.rejectReason ? ' · отказ: ' + b.rejectReason : ''}`}>
+                        <b>{b.name.split(' ')[0]}</b>
+                        <span>{b.watch}</span>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )
@@ -445,27 +485,55 @@ function ServiceBookings() {
       </div>
 
       {/* полный список */}
-      <table className="tbl" style={{ marginTop: 22 }}>
-        <thead><tr><th>Дата</th><th>Клиент</th><th>Часы · год</th><th>Статус</th><th>Действие</th></tr></thead>
-        <tbody>
-          {list.map(b => (
-            <tr key={b.id} style={b.status === 'новая' ? { background: 'rgba(212,175,106,.04)' } : undefined}>
-              <td className="muted">{b.date.split('-').reverse().join('.')}</td>
-              <td>{b.name}<div className="muted" style={{ fontSize: '.7rem' }}>{b.phone}</div></td>
-              <td>{b.watch}<div className="muted" style={{ fontSize: '.7rem' }}>{b.year || '—'}</div></td>
-              <td><span className={`pill ${statusPill(b.status)}`}>{b.status}</span></td>
-              <td>
-                {b.status === 'новая'
-                  ? <button className="btn btn-gold btn-sm" onClick={() => {
-                      setBookingStatus(b.id, 'подтверждена')
-                      toast({ title: 'Запись подтверждена ✦', text: `${b.name.split(' ')[0]}, ждём вас ${b.date.split('-').reverse().join('.')} на ТО «${b.watch}». — так уведомление придёт клиенту.` })
-                    }}>Подтвердить</button>
-                  : <span className="muted" style={{ fontSize: '.72rem' }}>—</span>}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {list.length === 0 ? (
+        <div className="empty">Пока нет записей на ТО. Оформите заявку на сайте или в кабинете — она появится здесь.</div>
+      ) : (
+        <table className="tbl" style={{ marginTop: 22 }}>
+          <thead><tr><th>Дата</th><th>Клиент</th><th>Часы · год</th><th>Статус</th><th>Действие</th></tr></thead>
+          <tbody>
+            {list.map(b => (
+              <tr key={b.id} style={b.status === 'новая' ? { background: 'rgba(212,175,106,.04)' } : undefined}>
+                <td className="muted">{b.date.split('-').reverse().join('.')}</td>
+                <td>{b.name}<div className="muted" style={{ fontSize: '.7rem' }}>{b.phone}</div></td>
+                <td>{b.watch}<div className="muted" style={{ fontSize: '.7rem' }}>{b.year || '—'}</div></td>
+                <td>
+                  <span className={`pill ${statusPill(b.status)}`}>{b.status}</span>
+                  {b.status === 'отказано' && b.rejectReason && <div className="muted" style={{ fontSize: '.68rem', marginTop: 4 }}>{b.rejectReason}</div>}
+                </td>
+                <td>
+                  {b.status === 'новая'
+                    ? <div className="act-cell">
+                        <button className="btn btn-gold btn-sm" onClick={() => confirm(b)}>Подтвердить</button>
+                        <button className="reject-btn" title="Отказать" onClick={() => { setRejectId(b.id); setReason('') }}>✕</button>
+                      </div>
+                    : <span className="muted" style={{ fontSize: '.72rem' }}>—</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {/* модалка отказа */}
+      {rejectId && (
+        <div className="overlay" onClick={() => setRejectId(null)}>
+          <div className="reject-modal" onClick={e => e.stopPropagation()}>
+            <span className="sec-label">Отказ в записи</span>
+            <h3 style={{ marginBottom: 6 }}>Причина отказа</h3>
+            <p className="muted" style={{ fontSize: '.8rem', fontWeight: 300, marginBottom: 16 }}>Клиент получит уведомление с указанной причиной.</p>
+            <div className="chips" style={{ marginBottom: 12 }}>
+              {REJECT_REASONS.map(r => (
+                <button key={r} className={`chip ${reason === r ? 'on' : ''}`} onClick={() => setReason(r)}>{r}</button>
+              ))}
+            </div>
+            <textarea className="search-inp" style={{ minHeight: 80, resize: 'vertical', marginBottom: 16 }} placeholder="Или своя причина…" value={reason} onChange={e => setReason(e.target.value)} />
+            <div className="product-actions">
+              <button className="btn btn-gold" style={{ opacity: reason.trim() ? 1 : 0.45 }} disabled={!reason.trim()} onClick={doReject}>Отказать</button>
+              <button className="btn btn-ghost" onClick={() => { setRejectId(null); setReason('') }}>Отмена</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
