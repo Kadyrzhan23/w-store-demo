@@ -122,6 +122,13 @@ function Header() {
             {t(l.key)}
           </NavLink>
         ))}
+        <div className="mmenu-lang">
+          {LANGS.map(l => (
+            <button key={l.id} className={lang === l.id ? 'on' : ''} onClick={() => { setLang(l.id); setOpen(false) }}>
+              {l.label}
+            </button>
+          ))}
+        </div>
       </nav>
     </>
   )

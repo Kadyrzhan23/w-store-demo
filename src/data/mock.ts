@@ -67,6 +67,7 @@ const rawProducts: ProductBase[] = [
   { id: 14, name: 'Longines Conquest V.H.P.',   brand: 'Longines',            category: 'original',    style: 'sport',  gender: 'муж',     price: 1100, diameter: 41,   glass: 'сапфировое',  water: 100, reserve: 0,  movement: 'кварц',        inStock: true,  dial: ['#22262c', '#0c0e11'], accent: '#d4af6a' },
   { id: 15, name: 'Rolex GMT-Master II',        brand: 'Rolex',               category: 'clone-swiss', style: 'diver',  gender: 'муж',     price: 820,  diameter: 40,   glass: 'сапфировое',  water: 100, reserve: 70, movement: 'автоподзавод', inStock: false, dial: ['#1a1030', '#0b0616'], accent: '#e07a7a' },
   { id: 16, name: 'Cartier Santos Medium',      brand: 'Cartier',             category: 'aaaa',        style: 'dress',  gender: 'жен',     price: 480,  diameter: 35,   glass: 'сапфировое',  water: 100, reserve: 42, movement: 'автоподзавод', inStock: true,  dial: ['#ece7dc', '#c4bca9'], accent: '#8a6d3b' },
+  { id: 17, name: 'Breitling Superocean Heritage B31', brand: 'Breitling',      category: 'original',    style: 'diver',  gender: 'муж',     price: 4200, diameter: 44,   glass: 'сапфировое',  water: 200, reserve: 78, movement: 'автоподзавод', inStock: true,  dial: ['#1b2029', '#0a0c11'], accent: '#6ab3d4' },
 ]
 
 export const products: Product[] = rawProducts.map(p => ({

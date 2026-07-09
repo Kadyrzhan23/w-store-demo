@@ -534,12 +534,16 @@ footer{border-top:1px solid var(--line);padding:56px 4vw 26px;background:var(--b
 
 /* ============ ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА (feature/shop-cart) ============ */
 .vswitch.lang button{width:auto;min-width:30px;height:30px;border-radius:14px;padding:0 8px;font-size:.62rem;letter-spacing:.05em}
+/* блок выбора языка в бургер-меню — по умолчанию скрыт (на десктопе) */
+.mmenu-lang{display:none}
 @media(max-width:1000px){
   .hdr-right{gap:8px}
-  .vswitch.lang{order:-1}
-}
-@media(max-width:420px){
-  .vswitch:not(.lang){display:none}
+  /* на мобильном переключатель языка убираем из хедера — он в бургер-меню */
+  .hdr-right .vswitch.lang{display:none}
+  .mmenu-lang{display:flex;gap:10px;margin-top:24px;padding-top:22px;border-top:1px solid var(--line2)}
+  .mmenu-lang button{flex:1;padding:12px 0;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;font-size:.82rem;letter-spacing:.1em;cursor:pointer;transition:.3s}
+  .mmenu-lang button:hover{border-color:var(--gold);color:var(--gold2)}
+  .mmenu-lang button.on{background:var(--gold);border-color:var(--gold);color:var(--ongold);font-weight:600}
 }
 
 /* услуги: три карточки в ряд */
